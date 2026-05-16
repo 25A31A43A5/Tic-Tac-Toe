@@ -1,20 +1,143 @@
-# Tic Tac Toe (C++)
+#include<iostream>
+#include<iomanip>
+#include<ctime>
+#include<windows.h>
+using namespace std;
+void displayboard(char *spaces);
+void computerturn(char *spaces, char computer,char player);
+bool checkwin(char *spaces, char player);
+bool checktie(char *spaces);
+int main(){
+    char spaces[9]{' ',' ',' ',' ',' ',' ',' ',' ',' '};
+    char player, computer;
+    srand(time(0));
+    cout<<"Choose your marker (X/O): ";
+    cin>>player;
+    if(player=='X' || player=='x'){
+        player='X';
+        computer='O';
+    }
+    else{
+        player='O';
+        computer='X';
+    }
+    int choice;
+    do{
+        displayboard(spaces);
+        cout<<"Enter your move (1-9): ";
+        cin>>choice;
+        while(choice<1 || choice>9||spaces[choice-1]!=' ' ){
+            cout<<"Invalid move. Try again: ";
+            cin>>choice;
+        }
+        spaces[choice-1]=player;
+        if(checkwin(spaces, player)){
+            displayboard(spaces);
+            cout<<"You Win"<<endl;
+            break;
+        }
+        else if(checktie(spaces)){
+            displayboard(spaces);
+            cout<<"It is a TIE!"<<endl;
+            break;
+        }
+        computerturn(spaces, computer, player);
+        if(checkwin(spaces, computer)){
+            displayboard(spaces);
+            cout<<"Computer Wins!"<<endl;
+            break;
+        }
+        else if(checktie(spaces)){
+            displayboard(spaces);
+            cout<<"It is a TIE!"<<endl;
+            break;
+        }
 
-A simple console-based Tic Tac Toe game written in C++.  
-The player uses **X** and the computer uses **O**.
+    }while(true);
+    return 0;
 
-## How to Compile
-g++ main.cpp -o tictactoe
-./tictactoe
-## Features
-- Player vs Computer
-- Random moves by the computer
-- Clean board layout
-- Automatic win detection
+}
+void displayboard(char *spaces){
+    cout<<endl;
+    cout<<" "<<spaces[0]<<" | "<<spaces[1]<<" | " <<spaces[2]<<endl;
+    cout<<"---+---+---"<<endl;
+    cout<<" "<<spaces[3]<<" | "<<spaces[4]<<" | " <<spaces[5]<<endl;
+    cout<<"---+---+---"<<endl;
+    cout<<" "<<spaces[6]<<" | "<<spaces[7]<<" | " <<spaces[8]<<endl;
+    cout<<endl;
+}
+void computerturn(char *spaces, char computer, char player){
 
-## Future Improvements
-- Add minimax algorithm for unbeatable AI
-- Add score tracking
-- Add menu system
-- Add player vs player
-- Add difficulty levels
+  for(int i=0; i<9; i++){
+    if(spaces[i]==' '){
+        spaces[i]=computer;
+        if(checkwin(spaces,computer)){
+            return;
+        }
+            else
+            spaces[i]=' ';
+        }
+    }
+    for(int i=0;i<9; i++){
+        if(spaces[i]==' '){
+            spaces[i]=player;
+            if(checkwin(spaces,player)){
+                spaces[i]=computer;
+                return;
+            }
+            else
+            spaces[i]=' ';
+        }
+    }
+    
+    if(spaces[4]==' '){
+        spaces[4]=computer;
+        return;
+    }
+    int corner[4]={0,2,6,8};
+    for(int i=0;i<4;i++){
+        if(spaces[corner[i]]==' '){
+            spaces[corner[i]]=computer;
+            return;
+        }
+        
+    }
+    int move;
+    do{
+        move=rand()%9;
+        if(spaces[move]==' '){
+            spaces[move]=computer;
+            return;
+        }
+    }while(true);
+    return;
+
+  }
+bool checkwin(char *spaces, char player){
+    if(spaces[0]!=' '&&spaces[0]==spaces[1]&&spaces[1]==spaces[2]&&spaces[0]==player){
+        return true;
+    }
+        else if(spaces[3]!=' '&&spaces[3]==spaces[4]&&spaces[4]==spaces[5]&&spaces[3]==player){
+        return true;}
+        else if (spaces[6]!=' '&&spaces[6]==spaces[7]&&spaces[7]==spaces[8]&&spaces[6]==player){
+        return true;}
+        else if(spaces[0]!=' '&&spaces[0]==spaces[3]&&spaces[3]==spaces[6]&&spaces[0]==player){
+        return true;}
+        else if(spaces[1]!=' '&&spaces[1]==spaces[4]&&spaces[4]==spaces[7]&&spaces[1]==player){
+        return true;}
+        else if(spaces[2]!=' '&&spaces[2]==spaces[5]&&spaces[5]==spaces[8]&&spaces[2]==player){
+        return true;}
+        else if(spaces[0]!=' '&&spaces[0]==spaces[4]&&spaces[4]==spaces[8]&&spaces[0]==player){
+        return true;}
+        else if(spaces[2]!=' '&&spaces[2]==spaces[4]&&spaces[4]==spaces[6]&&spaces[2]==player)           
+            return true;
+        else 
+        return false;
+        }
+bool checktie(char *spaces){
+    for(int i=0;i<9;i++){
+        if(spaces[i]==' ')
+        return false;
+    }
+    return true;
+}
